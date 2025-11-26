@@ -47,7 +47,6 @@
       border-radius: 4px;
     }
 
-    /* 進度條 */
     .progress-wrapper {
       margin: 12px 0 20px;
     }
@@ -75,7 +74,6 @@
       transition: width 0.25s ease;
     }
 
-    /* 情境卡 */
     .card {
       border-radius: 14px;
       border: 1px solid #eee;
@@ -269,6 +267,37 @@
       margin-left: 6px;
     }
 
+    .analysis-block {
+      margin-top: 24px;
+      padding: 16px 18px 18px;
+      border-radius: 12px;
+      background: #fff7e6;
+      border: 1px solid #ffe0b2;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .analysis-block h2 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+
+    .analysis-block h3 {
+      margin: 10px 0 6px;
+      font-size: 0.98rem;
+    }
+
+    .analysis-tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: #ffe0b2;
+      color: #b35a00;
+      margin-right: 6px;
+      margin-bottom: 4px;
+    }
+
     @media (max-width: 640px) {
       .container {
         padding: 16px 14px 22px;
@@ -288,15 +317,15 @@
   <div class="container">
     <h1>職場 PUA 應對練功房</h1>
     <p class="subtitle">
-      第二個練習，從「<span class="highlight">組織溝通 × 情緒勞務</span>」的角度，練習面對不當 PUA：<br>
-      ① 先判斷：這種行為的性質是什麼？<br>
-      ② 當下怎麼回比較保護自己又維持專業？<br>
-      ③ 事後可以怎麼運用紀錄、社會支持與組織制度？
+      透過情境練習，從「<span class="highlight">組織溝通 × 情緒勞務</span>」的角度，思考如何面對不當 PUA：<br>
+      ① 辨識：這是正常回饋還是霸凌／PUA？<br>
+      ② 當下：怎麼回比較專業又保護自己？<br>
+      ③ 事後：如何善用紀錄、社會支持與制度？
     </p>
 
     <div class="progress-wrapper">
       <div class="progress-label">
-        <span id="progress-text">情境 1 / 3</span>
+        <span id="progress-text">情境 1 / 5</span>
         <span id="score-text">目前正確：0 題</span>
       </div>
       <div class="progress-bar">
@@ -312,7 +341,7 @@
       <p class="scenario-note" id="scenario-note"></p>
     </div>
 
-    <!-- 步驟一 -->
+    <!-- STEP 1 -->
     <div class="card">
       <div class="step-label">STEP 1</div>
       <div class="section-title">判斷：這種行為的性質是什麼？</div>
@@ -323,7 +352,7 @@
       <div class="explanation" id="q1-explanation"></div>
     </div>
 
-    <!-- 步驟二 -->
+    <!-- STEP 2 -->
     <div class="card">
       <div class="step-label">STEP 2</div>
       <div class="section-title">當下回應：哪一種說法較健康？</div>
@@ -334,7 +363,7 @@
       <div class="explanation" id="q2-explanation"></div>
     </div>
 
-    <!-- 步驟三 -->
+    <!-- STEP 3 -->
     <div class="card">
       <div class="step-label">STEP 3</div>
       <div class="section-title">事後行動：從「我」到「組織」怎麼保護自己？</div>
@@ -354,10 +383,17 @@
       </div>
       <button class="primary-btn" id="next-btn" type="button" disabled>下一個情境 ▷</button>
     </div>
+
+    <!-- 綜合分析區塊 -->
+    <div id="analysis-block" class="analysis-block" style="display:none;"></div>
   </div>
 
   <script>
-    // ========= 情境資料 =========
+    // ====== 情境資料 ======
+    // errorType:
+    //   selfBlame  = 過度自責、把問題全算在自己身上
+    //   cutOff     = 乾脆不溝通／放爛關係與自己的課題
+    //   aggressive = 衝動硬碰硬，風險過高
     const scenarios = [
       {
         title: "情境 1：會議中的公開羞辱",
@@ -379,6 +415,11 @@
             "C. 只是主管一時說話太快，完全不需要放在心上。"
           ],
           correctIndex: 1,
+          errorTypes: [
+            "selfBlame", // 把辱罵當「正常回饋」、自己要承受
+            "",          // 正解
+            "cutOff"     // 完全忽略，不去面對問題
+          ],
           explanation:
 "這裡的重點不是「有沒有意見」，而是「怎麼講」：\n" +
 "．批評內容沒有聚焦在企劃本身，而是攻擊你的能力與人格（幼稚、以前怎麼混、要不要用你）。\n" +
@@ -391,16 +432,19 @@
             {
               text: "「那不然你覺得怎樣才叫厲害？你自己做啊！」當場翻白眼、丟筆。",
               isBest: false,
+              errorType: "aggressive",
               explanation: "情緒可以理解，但這種回應容易被標記成『不專業、不穩定』，事後對你非常不利。"
             },
             {
               text: "（沉默，不再說話，下次報告時盡量少講，避免被點名。）",
               isBest: false,
+              errorType: "cutOff",
               explanation: "短期可以自保，但會讓主管的行為不斷被強化，也可能讓你失去發聲與成長的機會。"
             },
             {
               text: "「我聽到的是您對企劃的邏輯有疑慮。方便請您具體說明哪一段邏輯最讓您擔心嗎？我可以再調整。」",
               isBest: true,
+              errorType: "",
               explanation: "這句話把焦點拉回『工作內容』，不接收人身攻擊，同時維持專業與修正意願。"
             }
           ],
@@ -417,16 +461,19 @@
             {
               text: "完全當作沒發生，告訴自己「我太敏感」，繼續當作一切正常。",
               isBest: false,
+              errorType: "selfBlame",
               explanation: "這會讓你忽略真實壓力源，也讓類似行為在組織裡持續被默認。"
             },
             {
               text: "把當天會議內容記錄下來，包含大致用詞與你的感受，再找值得信任的前輩或人資討論，評估未來是否需要正式反映。",
               isBest: true,
+              errorType: "",
               explanation: "這同時做到：\n．不再把全部問題內化成自己太脆弱，\n．留存紀錄，視未來狀況決定要不要升級處理。"
             },
             {
               text: "立刻在公司群組公開反嗆主管，要求他向你道歉，讓大家來評評理。",
               isBest: false,
+              errorType: "aggressive",
               explanation: "你有權利覺得不舒服，但在公開頻道硬碰硬，通常對權力較小的一方不利。"
             }
           ],
@@ -458,6 +505,11 @@
             "C. 提到考績，表示他其實是為你好，希望你表現更好。"
           ],
           correctIndex: 0,
+          errorTypes: [
+            "",
+            "selfBlame",
+            "selfBlame"
+          ],
           explanation:
 "這段話的關鍵問題在於：\n" +
 "．表面是稱讚與信任，實際是「在下班前臨時指派大量工作」，沒有討論你的現有工作量與週末安排。\n" +
@@ -470,16 +522,19 @@
             {
               text: "「好啦我知道啦，反正我就是要做就對了。」苦笑，心裡爆炸。",
               isBest: false,
+              errorType: "selfBlame",
               explanation: "這讓對方以為你認同這種安排，也強化了之後繼續這樣指派的可能。"
             },
             {
               text: "「我知道這個案子很重要，也謝謝你信任我。我目前手上的進度是 A、B、C，週末原本有家庭安排。能不能一起評估一下，要不要調整其他工作或分配部分內容給同事？」",
               isBest: true,
+              errorType: "",
               explanation: "這句話同時表達：\n．認同案子的重要性、維持專業；\n．清楚說明你的工作量與界線；\n．把問題變成『一起評估資源』，而不是只看你有沒有「奉獻精神」。"
             },
             {
               text: "「你這樣威脅我考績不太專業吧？我可以錄音嗎？」",
               isBest: false,
+              errorType: "aggressive",
               explanation: "這樣說有其道理，但在權力差距大的情況下，當場正面衝突風險很高。"
             }
           ],
@@ -495,16 +550,19 @@
             {
               text: "什麼紀錄都不留，只告訴自己要更會看眼色，以後主管說什麼就全部答應。",
               isBest: false,
+              errorType: "selfBlame",
               explanation: "這會讓你越來越走向「過度情緒勞務與自我犧牲」，很容易倦怠。"
             },
             {
               text: "把這次對話大致內容記下來，包含日期、時間、關鍵字句，並且跟信任的同事或導師討論，了解公司文化與可行的應對策略。",
               isBest: true,
+              errorType: "",
               explanation: "這同時運用：\n．自我覺察與界線意識；\n．同儕與導師的社會支持；\n．為將來必要時的正式反映累積客觀紀錄。"
             },
             {
               text: "立刻在匿名社群上公開寫文爆料公司有多爛，並 tag 公司帳號。",
               isBest: false,
+              errorType: "aggressive",
               explanation: "這可能會帶來情緒宣洩，但也可能讓你暴露在法律與職涯風險中。"
             }
           ],
@@ -536,6 +594,11 @@
             "C. 在私訊說自己其實是在激勵，是一種很貼心的行為。"
           ],
           correctIndex: 0,
+          errorTypes: [
+            "",
+            "selfBlame",
+            "selfBlame"
+          ],
           explanation:
 "關鍵問題在於：\n" +
 "．在公開群組中點名貶低，是利用「所有人都在看」的壓力來控制你，\n" +
@@ -548,16 +611,19 @@
             {
               text: "「你每次都在群組羞辱我，我真的快受不了，你這樣很過分。」",
               isBest: false,
+              errorType: "aggressive",
               explanation: "情緒真實，但容易被對方抓住『你不專業、太情緒化』來反擊。"
             },
             {
               text: "「我想回應一下最近幾次在群組被點名的情況。對我來說，如果是工作上的錯誤，我很願意調整，但當眾的負面評論會讓我在團隊中很難展開工作。未來如果有需要調整的地方，能不能優先用私訊或一對一的方式說明？」",
               isBest: true,
+              errorType: "",
               explanation: "這句話：\n．承認自己願意為工作內容負責，\n．說出當眾評論對工作關係的實際影響，\n．提出具體替代方案（私訊、一對一），是成熟的界線表達。"
             },
             {
               text: "「好啦你說得都對，我就是太玻璃心，以後我會閉嘴認真做事。」",
               isBest: false,
+              errorType: "selfBlame",
               explanation: "這是把對方的 PUA 話術內化為真理，長期會侵蝕自尊與判斷力。"
             }
           ],
@@ -574,16 +640,19 @@
             {
               text: "把所有對話紀錄整理成時間軸（含群組與私訊），然後先與信任的前輩、人資或導師討論，評估是否啟動正式反映或調整部門的可能。",
               isBest: true,
+              errorType: "",
               explanation: "這運用了：\n．事件紀錄（避免只剩主觀感受）；\n．社會支持與制度資源；\n．評估風險後再決定要不要正式投訴或尋求調整。"
             },
             {
               text: "直接在群組裡貼出你和主管的私訊截圖，讓大家看清楚他的真面目。",
               isBest: false,
+              errorType: "aggressive",
               explanation: "雖然很想這樣做，但在多數組織文化下，這很可能對你造成反效果，也牽涉隱私與規範問題。"
             },
             {
               text: "認定「所有公司都一樣爛」，什麼也不做，只是默默地每天消耗自己。",
               isBest: false,
+              errorType: "cutOff",
               explanation: "這會讓你走向習得無助，長期大幅增加倦怠與心理健康風險。"
             }
           ],
@@ -594,10 +663,187 @@
 "．在安全前提下評估改變（內部調整、外部轉職、正式申訴）；\n" +
 "．同時持續維護自己的心理界線與自我價值感。"
         }
+      },
+      {
+        title: "情境 4：績效面談中的人格貶低與比較",
+        tag: "績效考核",
+        text:
+`年度績效面談時，主管對你說：
+
+「老實講，你的能力跟同梯比起來真的普通很多。
+你看看小林，人家加班也不會喊累，做事又快又細心，
+你這樣的表現，放在我們這個團隊真的很勉強。」
+
+你試著問他具體可以改進的地方，他卻說：
+「你先把自己的心態調整好吧，不要一天到晚在那邊計較。」`,
+        note: "你覺得被比較、被貼標籤，也搞不清楚自己到底差在哪裡。",
+        q1: {
+          question: "就回饋品質來看，這種面談最大的問題是？",
+          choices: [
+            "A. 他有提到別人的優點，應該是想激勵你向上。",
+            "B. 幾乎沒有具體行為回饋，只有模糊的人格評價與比較，是低品質回饋甚至接近 PUA。",
+            "C. 年度面談本來就會拿同事出來比較，這是很正常的事。"
+          ],
+          correctIndex: 1,
+          errorTypes: [
+            "selfBlame",
+            "",
+            "selfBlame"
+          ],
+          explanation:
+"高品質回饋應該聚焦在「可調整的具體行為」，而不是模糊的人格貶低與比較。\n\n" +
+"這裡的話語：\n" +
+"．只說你『普通』『勉強』，卻不講清楚工作哪一部分需要加強；\n" +
+"．用同事當標準，製造競爭與羞恥感；\n" +
+"．當你想要具體回饋時，反過來說是你心態問題。\n\n" +
+"這些都是接近 PUA／霸凌的做法，而不是建設性的績效回饋。"
+        },
+        q2: {
+          question: "當下你如果想問清楚，但又不想讓對方覺得你在頂嘴，哪一種說法比較合適？",
+          options: [
+            {
+              text: "「好啦你說我爛就爛，我也不知道我能怎樣。」",
+              isBest: false,
+              errorType: "selfBlame",
+              explanation: "這種回應把自己的價值完全交給對方定義，也中斷了任何具體討論的可能。"
+            },
+            {
+              text: "「謝謝你的回饋。我想更清楚了解自己可以怎麼調整，方便舉 1～2 個具體例子嗎？例如：在哪些專案或任務裡，你覺得我特別需要加強？」",
+              isBest: true,
+              errorType: "",
+              explanation: "這句話把焦點從『我這個人好不好』拉回『具體工作行為』，是很典型的專業式提問。"
+            },
+            {
+              text: "「你這樣講很不專業欸，我要去跟總經理檢舉你。」",
+              isBest: false,
+              errorType: "aggressive",
+              explanation: "你的感受合理，但當場情緒性喊檢舉，會讓你處在更弱勢的位置。"
+            }
+          ],
+          explanation:
+"在權力不對等的情境下，當下的目標通常是：\n" +
+"．盡可能多拿到可用資訊（具體行為與期待）；\n" +
+"．留下你有認真面對工作的紀錄；\n" +
+"．暫時先不在現場把衝突推到最高點。\n\n" +
+"這樣之後如果要尋求人資或更高層協助，你也有更明確的例證可以說明。"
+        },
+        q3: {
+          question: "面談結束後，哪一個後續行動最有助於保護自己與釐清現況？",
+          options: [
+            {
+              text: "直接把主管的話全部當真，認定自己就是一無是處，開始瘋狂加班想證明自己可以。",
+              isBest: false,
+              errorType: "selfBlame",
+              explanation: "這會讓你落入過度情緒勞務與自我懷疑的惡性循環。"
+            },
+            {
+              text: "把今天的對話記錄下來（時間、場合、說了哪些話），之後找一位信任的前輩或導師，請他從第三者角度幫你看：哪些是有建設性的回饋、哪些可能是情緒性貶抑。",
+              isBest: true,
+              errorType: "",
+              explanation: "這可以幫助你：\n．區分『真正需要調整的技術／行為』與『不必要的人格貶抑』；\n．避免一股腦全部吞下。"
+            },
+            {
+              text: "當天晚上就寄信給全公司，抄送所有高層，控訴主管情緒勒索。",
+              isBest: false,
+              errorType: "aggressive",
+              explanation: "正式投訴需要評估證據與風險，直接全公司群發通常對你極不利。"
+            }
+          ],
+          explanation:
+"壓力與倦怠研究提醒：\n" +
+"把不合理的話全部算在自己身上，很容易讓人陷入憂鬱與職涯迷惘；\n" +
+"而成熟的做法，是在情緒過去後，找可信任的第三者一起釐清。"
+        }
+      },
+      {
+        title: "情境 5：非正式聚會中的性別／身體評論",
+        tag: "性別與界線",
+        text:
+`公司聚餐時，主管喝了點酒，對你說：
+
+「欸你其實身材蠻不錯的，之後去見客戶就派你，
+客戶看到你一定比較開心。你要多打扮一點啦，這是你的優勢。」
+
+旁邊同事笑笑說：「主管是在誇獎你啦，你太敏感了。」`,
+        note: "你覺得不舒服，但又被說成是「開玩笑」、「稱讚」。",
+        q1: {
+          question: "就職場溝通規範來說，這段話的問題主要在哪裡？",
+          choices: [
+            "A. 主管只是嘴巴比較沒遮攔，但其實是在稱讚你，沒什麼問題。",
+            "B. 把你當成「討好客戶的工具」，用身體與外表來設定工作角色，帶有物化與性別刻板印象，是不當的職場言行。",
+            "C. 聚餐本來就比較隨便，不能用工作標準要求。"
+          ],
+          correctIndex: 1,
+          errorTypes: [
+            "selfBlame",
+            "",
+            "cutOff"
+          ],
+          explanation:
+"即使在非正式場合，主管仍然代表組織與權力位置。\n\n" +
+"這段話問題在於：\n" +
+"．用你的身體與外表來決定你該做什麼工作（見客戶）；\n" +
+"．暗示你的價值在於能不能取悅對方，而不是專業能力；\n" +
+"．讓你很難拒絕，卻又被說是『開玩笑』『稱讚』。\n\n" +
+"這已經超過健康玩笑的界線，帶有物化與性騷擾風險。"
+        },
+        q2: {
+          question: "在當下你如果想表達不舒服，又不想直接把場面弄得太僵，下列哪一句較合適？",
+          options: [
+            {
+              text: "「所以你的意思是我靠臉吃飯囉？那我是不是可以不用做事只要陪笑就好？」冷笑回嗆。",
+              isBest: false,
+              errorType: "aggressive",
+              explanation: "這會立刻升高衝突，雖然氣很順，但在權力不對等下風險很高。"
+            },
+            {
+              text: "「我比較希望被記得的是工作能力，不是外表。之後談對外窗口分工時，可不可以以專業與經驗為主？」",
+              isBest: true,
+              errorType: "",
+              explanation: "這句話清楚表達界線，也把話題拉回專業與分工，很符合組織溝通的語言。"
+            },
+            {
+              text: "「哈哈沒有啦你想太多了，我隨便啦。」勉強陪笑帶過。",
+              isBest: false,
+              errorType: "selfBlame",
+              explanation: "這讓對方以為你可以接受這種玩笑，日後更難主張界線。"
+            }
+          ],
+          explanation:
+"在性別相關議題上，很多人會下意識笑著帶過，\n" +
+"但這會讓不當行為被正常化。溫和但清楚地把焦點拉回『專業』，\n" +
+"是許多研究與倡議組織建議的作法之一。"
+        },
+        q3: {
+          question: "聚餐之後，你可以採取哪一個後續行動，來保護自己並釐清組織文化？",
+          options: [
+            {
+              text: "告訴自己不要那麼小題大作，反正大家都當玩笑笑笑就好了。",
+              isBest: false,
+              errorType: "selfBlame",
+              explanation: "這會讓你忽略自己真實的不舒服感受，也可能讓類似行為一再發生。"
+            },
+            {
+              text: "把當天的對話大致記下來（時間、地點、在場的人、說了什麼），之後找信任的前輩、人資或校友諮詢，了解公司在性別言行上的正式政策與實際文化。",
+              isBest: true,
+              errorType: "",
+              explanation: "這有助於你：\n．確認自己感受的合理性；\n．了解公司是否有正式管道處理這類事件；\n．評估自己是否適合長期待在這裡。"
+            },
+            {
+              text: "當晚就在社群上發文寫『公司性騷擾超嚴重』，並附上公司名稱。",
+              isBest: false,
+              errorType: "aggressive",
+              explanation: "這樣做雖然很想出氣，但在還沒評估證據與程序前，會讓你處在法律與職涯高度風險中。"
+            }
+          ],
+          explanation:
+"性別與身體界線議題，常常會被『開玩笑』『你太敏感』蓋過去。\n\n" +
+"事後記錄與尋求專業／制度性諮詢，是國內外許多性平倡議都會強調的步驟。"
+        }
       }
     ];
 
-    // ========= DOM 元素 =========
+    // ====== DOM 元素 ======
     const progressText = document.getElementById("progress-text");
     const scoreText = document.getElementById("score-text");
     const progressFill = document.getElementById("progress-fill");
@@ -630,12 +876,19 @@
     const summaryText = document.getElementById("summary-text");
     const scorePill = document.getElementById("score-pill");
 
-    // ========= 狀態 =========
+    const analysisBlock = document.getElementById("analysis-block");
+
+    // ====== 狀態 ======
     let currentIndex = 0;
     let totalCorrect = 0;
     let q1Answered = false;
     let q2Answered = false;
     let q3Answered = false;
+    let analysisShown = false;
+
+    // 紀錄每一題作答，用於綜合分析
+    // { scenario: number, step: "Q1"|"Q2"|"Q3", correct: boolean, errorType: string }
+    let answerLog = [];
 
     function renderScenario() {
       const s = scenarios[currentIndex];
@@ -700,7 +953,6 @@
         q3OptionsContainer.appendChild(btn);
       });
 
-      // 重置步驟狀態
       q1Answered = false;
       q2Answered = false;
       q3Answered = false;
@@ -715,18 +967,33 @@
       const buttons = q1OptionsContainer.querySelectorAll(".option-btn");
       buttons.forEach(b => b.classList.add("disabled"));
 
+      let correct = false;
+      let errorType = "";
+
       if (index === correctIndex) {
         btn.classList.add("correct");
         q1Feedback.textContent = "✅ 沒錯，這裡的關鍵問題被你抓到了。";
         q1Feedback.classList.add("correct");
         totalCorrect++;
         scoreText.textContent = `目前正確：${totalCorrect} 題`;
+        correct = true;
       } else {
         btn.classList.add("incorrect");
         buttons[correctIndex].classList.add("correct");
         q1Feedback.textContent = "❌ 很多人一開始會這樣想，再看解析想想：真正的關鍵在哪裡？";
         q1Feedback.classList.add("incorrect");
+        if (s.q1.errorTypes && s.q1.errorTypes[index]) {
+          errorType = s.q1.errorTypes[index];
+        }
       }
+
+      answerLog.push({
+        scenario: currentIndex,
+        step: "Q1",
+        correct,
+        errorType
+      });
+
       q1Answered = true;
       updateNextButtonState();
     }
@@ -738,12 +1005,16 @@
       const buttons = q2OptionsContainer.querySelectorAll(".option-btn");
       buttons.forEach(b => b.classList.add("disabled"));
 
+      let correct = false;
+      let errorType = "";
+
       if (selected.isBest) {
         btn.classList.add("correct");
         q2Feedback.textContent = "✅ 很好，這種回應兼顧了專業與自我保護。";
         q2Feedback.classList.add("correct");
         totalCorrect++;
         scoreText.textContent = `目前正確：${totalCorrect} 題`;
+        correct = true;
       } else {
         btn.classList.add("incorrect");
         q2Feedback.textContent = "❌ 先看解析，想想這樣回之後，權力與關係會往哪邊傾斜。";
@@ -753,7 +1024,18 @@
             buttons[idx].classList.add("correct");
           }
         });
+        if (selected.errorType) {
+          errorType = selected.errorType;
+        }
       }
+
+      answerLog.push({
+        scenario: currentIndex,
+        step: "Q2",
+        correct,
+        errorType
+      });
+
       q2Answered = true;
       updateNextButtonState();
     }
@@ -765,12 +1047,16 @@
       const buttons = q3OptionsContainer.querySelectorAll(".option-btn");
       buttons.forEach(b => b.classList.add("disabled"));
 
+      let correct = false;
+      let errorType = "";
+
       if (selected.isBest) {
         btn.classList.add("correct");
         q3Feedback.textContent = "✅ 不只是撐下去，而是開始善用紀錄與支持系統。";
         q3Feedback.classList.add("correct");
         totalCorrect++;
         scoreText.textContent = `目前正確：${totalCorrect} 題`;
+        correct = true;
       } else {
         btn.classList.add("incorrect");
         q3Feedback.textContent = "❌ 這可能會帶來短期紓壓，但長期風險很大，看看解析。";
@@ -780,7 +1066,18 @@
             buttons[idx].classList.add("correct");
           }
         });
+        if (selected.errorType) {
+          errorType = selected.errorType;
+        }
       }
+
+      answerLog.push({
+        scenario: currentIndex,
+        step: "Q3",
+        correct,
+        errorType
+      });
+
       q3Answered = true;
       updateNextButtonState();
     }
@@ -791,8 +1088,8 @@
 
         const totalQuestions = scenarios.length * 3;
         if (currentIndex === scenarios.length - 1) {
-          nextBtn.textContent = "完成本輪練習 🎉";
-          summaryText.textContent = "已完成所有情境！你可以重新開始，或截圖與同學討論你的選擇。";
+          nextBtn.textContent = "查看綜合分析 📊";
+          summaryText.textContent = "已完成所有情境！按下「查看綜合分析」，看看自己面對 PUA 的慣性。\n";
           scorePill.textContent = `總正確：${totalCorrect} / ${totalQuestions}`;
         } else {
           nextBtn.textContent = "下一個情境 ▷";
@@ -805,26 +1102,37 @@
     function goToNextScenario() {
       if (!(q1Answered && q2Answered && q3Answered)) return;
 
-      if (currentIndex < scenarios.length - 1) {
-        currentIndex++;
-        renderScenario();
-      } else {
-        // 完成一輪後，再按就重新開始
-        currentIndex = 0;
-        totalCorrect = 0;
-        renderScenario();
-        scorePill.textContent = "新的一輪開始";
+      if (currentIndex === scenarios.length - 1) {
+        if (!analysisShown) {
+          generateAnalysis();
+          return;
+        } else {
+          restartAll();
+          analysisBlock.style.display = "none";
+          analysisShown = false;
+          return;
+        }
       }
+
+      currentIndex++;
+      renderScenario();
     }
 
     function restartAll() {
       currentIndex = 0;
       totalCorrect = 0;
+      q1Answered = false;
+      q2Answered = false;
+      q3Answered = false;
+      answerLog = [];
+      analysisShown = false;
+      analysisBlock.style.display = "none";
       renderScenario();
       scorePill.textContent = "練習中";
+      summaryText.textContent = "依序完成三個步驟，再進入下一個情境。";
+      nextBtn.textContent = "下一個情境 ▷";
     }
 
-    // 解析開關
     q1ToggleExplain.addEventListener("click", () => {
       q1Explain.classList.toggle("visible");
     });
@@ -837,6 +1145,75 @@
 
     nextBtn.addEventListener("click", goToNextScenario);
     restartBtn.addEventListener("click", restartAll);
+
+    // ====== 綜合分析：面對職場 PUA 的合理作法 ======
+    function generateAnalysis() {
+      const totalQuestions = scenarios.length * 3;
+      const incorrect = totalQuestions - totalCorrect;
+
+      let selfBlameCount = 0;
+      let cutOffCount = 0;
+      let aggressiveCount = 0;
+
+      answerLog.forEach(a => {
+        if (!a.correct && a.errorType) {
+          if (a.errorType === "selfBlame") selfBlameCount++;
+          if (a.errorType === "cutOff") cutOffCount++;
+          if (a.errorType === "aggressive") aggressiveCount++;
+        }
+      });
+
+      let html = "";
+      html += "<h2>🔍 綜合分析：你面對職場 PUA 的慣性反應</h2>";
+      html += `<p>本輪共完成 <b>${scenarios.length}</b> 個情境、<b>${totalQuestions}</b> 題小題，答對 <b>${totalCorrect}</b> 題。`;
+      if (incorrect === 0) {
+        html += " 幾乎全對，代表你在概念上已經相當成熟，可以把重點放在實際生活中的運用。</p>";
+      } else {
+        html += ` 仍有 <b>${incorrect}</b> 題偏向比較直覺、但風險較高的作法。</p>`;
+      }
+
+      html += "<h3>一、常見卡關模式</h3>";
+
+      if (selfBlameCount === 0 && cutOffCount === 0 && aggressiveCount === 0) {
+        html += "<p>你的錯誤分布沒有太明顯的固定模式，代表你會依照情境調整。可以回頭看一看哪幾題最猶豫：那通常就是你在真實職場中也最容易卡住的情境。</p>";
+      } else {
+        if (selfBlameCount > 0) {
+          html += `<div><span class="analysis-tag">過度自責／內化 (${selfBlameCount} 題)</span>`;
+          html += "<p>你有幾題選擇把不合理對待算在自己身上，例如：覺得一定是自己不夠好、不夠努力、太玻璃心。這表示你很願意負責任，但也可能<strong>把本來屬於加害者或制度的問題，全部扛到自己身上</strong>。</p></div>";
+        }
+        if (cutOffCount > 0) {
+          html += `<div><span class="analysis-tag">切斷／放爛型 (${cutOffCount} 題)</span>`;
+          html += "<p>有幾題傾向選擇：什麼都不講、以後都不要合作、乾脆放爛。這樣可以暫時減少衝突，但也會讓你<strong>連自己的權益與課題一起放掉</strong>，久了容易變成習得無助。</p></div>";
+        }
+        if (aggressiveCount > 0) {
+          html += `<div><span class="analysis-tag">衝動硬碰硬型 (${aggressiveCount} 題)</span>`;
+          html += "<p>有一些情境，你會想直接公開對嗆、全公司控訴，這在情緒上很真實，但在權力不對等的組織裡，往往<strong>先受傷的是比較弱勢的那一方</strong>。研究也提醒，這類作法常會把焦點從加害者的行為，轉移到你『不夠專業』上。</p></div>";
+        }
+      }
+
+      html += "<h3>二、面對職場 PUA，比較合理的 4 步驟</h3>";
+      html += "<ol>";
+      html += "<li><b>先辨識：這是正常回饋，還是 PUA／霸凌？</b><br>問自己兩個問題：<br>．對方有沒有聚焦在具體行為與工作內容，而不是貶低人格？<br>．說話的場合是否合適（私下 vs 公開）、有沒有利用權力地位放大羞辱？</li>";
+      html += "<li><b>再課題分離：不把對方的操弄變成自己的真相。</b><br>練習在心裡說：<br>「他的說話方式，是他的課題；<br>　我要為自己的感受與專業行為負責。」<br>避免出現：<br>．「一定是我太差」式的過度自責，<br>．或「反正世界都很爛」的全盤放棄。</li>";
+      html += "<li><b>當下用『專業語言』回應，而不是只忍耐或爆炸。</b><br>多數情境下，比較安全又有力量的做法是：<br>．把焦點拉回具體工作（內容、流程、分工）；<br>．描述對工作的影響（團隊氣氛、合作效率）；<br>．提出具體替代方案（改用私訊、調整工作量、重新分工）。<br>這會讓你看起來是「在解決問題」，而不是在吵架。</li>";
+      html += "<li><b>事後：紀錄 × 支持 × 制度 × 出口。</b><br>面對疑似 PUA 或霸凌時，研究與實務都建議至少做到：<br>．<u>紀錄</u>：時間、地點、說了什麼、有哪些人在場；<br>．<u>支持</u>：找可信任的同事、導師、學長姐或朋友討論，校正現實感；<br>．<u>制度</u>：了解公司人資／申訴機制，必要時正式反映；<br>．<u>出口</u>：長期若無法改善，也要允許自己思考轉組、轉職等選項。</li>";
+      html += "</ol>";
+
+      html += "<h3>三、如何把這套 4 步驟用在自己身上？</h3>";
+      html += "<p>之後遇到讓你覺得「怪怪的」的回饋時，可以在心裡快速跑一次：<br>";
+      html += "① 這句話有沒有聚焦在『事情』而不是『我這個人』？<br>";
+      html += "② 對方的情緒／風格是他的課題，我現在真正要面對的是什麼？<br>";
+      html += "③ 我可以怎麼用比較專業的語言，把焦點拉回工作或界線？<br>";
+      html += "④ 這件事情需要不要被記錄下來、跟誰討論、是否要運用制度？</p>";
+      html += "<p>如果你願意，也可以截圖 1～2 題自己最猶豫的情境，當成課堂討論素材，讓同學一起討論「如果在真實職場，你敢怎麼做？為什麼？」</p>";
+
+      analysisBlock.innerHTML = html;
+      analysisBlock.style.display = "block";
+      analysisShown = true;
+      nextBtn.textContent = "重新開始本練功房 🔁";
+      summaryText.textContent = "你可以依照上面的分析調整自己的練習重點，或重新做一次看看是否改變。";
+      scorePill.textContent = `總正確：${totalCorrect} / ${totalQuestions}`;
+    }
 
     // 初始化
     renderScenario();
